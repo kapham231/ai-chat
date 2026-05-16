@@ -56,6 +56,8 @@ const ChatPage = () => {
             setSelectedConversation(
                 newConversation
             );
+
+            setMessages([]);
         } catch (error) {
             console.error(error);
         }
