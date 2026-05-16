@@ -72,19 +72,30 @@ const ChatPage = () => {
     };
 
     const sendMessage = async (
-        prompt
+        prompt,
+        attachments = []
     ) => {
         if (!selectedConversation)
             return;
 
+        const tempUserMessage = {
+            _id: "temp-" + Date.now(),
+            role: "user",
+            content: prompt,
+            attachments: attachments,
+        };
+
         try {
             setLoading(true);
+            setMessages((prev) => [...prev, tempUserMessage]);
+
             const response = await api.post(
                 "/chat",
                 {
                     conversationId:
                         selectedConversation._id,
                     prompt,
+                    attachments,
                 }
             );
 
@@ -94,7 +105,7 @@ const ChatPage = () => {
             } = response.data.data;
 
             setMessages((prev) => [
-                ...prev,
+                ...prev.filter(m => m._id !== tempUserMessage._id),
                 userMessage,
                 assistantMessage,
             ]);
@@ -102,6 +113,8 @@ const ChatPage = () => {
             fetchConversations();
         } catch (error) {
             console.error(error);
+            setMessages((prev) => prev.filter(m => m._id !== tempUserMessage._id));
+            alert("Failed to send message");
         } finally {
             setLoading(false);
         }

@@ -1,6 +1,6 @@
 import api from "../services/api";
 
-const UploadButton = () => {
+const UploadButton = ({ onUploadSuccess }) => {
     const handleUpload = async (e) => {
         const file = e.target.files[0];
 
@@ -16,12 +16,9 @@ const UploadButton = () => {
                 formData
             );
 
-            console.log(
-                "Uploaded:",
-                response.data
-            );
-
-            alert("File uploaded!");
+            if (onUploadSuccess) {
+                onUploadSuccess(response.data.data);
+            }
         } catch (error) {
             console.error(error);
 
