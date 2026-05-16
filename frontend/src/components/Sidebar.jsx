@@ -2,6 +2,7 @@ const Sidebar = ({
     conversations,
     createConversation,
     onSelectConversation,
+    selectedConversation
 }) => {
     return (
         <div className="w-72 border-r p-4">
@@ -23,7 +24,11 @@ const Sidebar = ({
                         onClick={() =>
                             onSelectConversation(conversation)
                         }
-                        className="p-3 rounded-lg bg-gray-100 cursor-pointer hover:bg-gray-200"
+                        className={`p-3 rounded-lg cursor-pointer ${selectedConversation?._id ===
+                            conversation._id
+                            ? "bg-black text-white"
+                            : "bg-gray-100 hover:bg-gray-200"
+                            }`}
                     >
                         {conversation.title}
                     </div>

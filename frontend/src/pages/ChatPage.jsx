@@ -7,10 +7,9 @@ import api from "../services/api";
 
 const ChatPage = () => {
     const [conversations, setConversations] = useState([]);
-
     const [selectedConversation, setSelectedConversation] = useState(null);
-
     const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         fetchConversations();
@@ -77,6 +76,7 @@ const ChatPage = () => {
             return;
 
         try {
+            setLoading(true);
             const response = await api.post(
                 "/chat",
                 {
@@ -100,6 +100,8 @@ const ChatPage = () => {
             fetchConversations();
         } catch (error) {
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -111,12 +113,17 @@ const ChatPage = () => {
                 onSelectConversation={
                     handleSelectConversation
                 }
+                selectedConversation={selectedConversation}
             />
 
             <div className="flex-1">
                 <ChatWindow
                     messages={messages}
                     onSendMessage={sendMessage}
+                    selectedConversation={
+                        selectedConversation
+                    }
+                    loading={loading}
                 />
             </div>
         </div>

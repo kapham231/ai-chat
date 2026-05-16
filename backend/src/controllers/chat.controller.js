@@ -20,6 +20,21 @@ export const sendMessage = async (req, res) => {
             content: prompt,
         });
 
+        // Update conversation title if still default
+        const conversation = await Conversation.findById(
+            conversationId
+        );
+
+        if (
+            conversation.title ===
+            "New Conversation"
+        ) {
+            conversation.title =
+                prompt.trim().slice(0, 30);
+
+            await conversation.save();
+        }
+
         // Generate AI response
         const aiResponse = await generateAIResponse(prompt);
 
