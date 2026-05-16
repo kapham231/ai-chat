@@ -8,6 +8,7 @@ const ChatWindow = ({
     onSendMessage,
     selectedConversation,
     loading,
+    onOpenSidebar,
 }) => {
     const bottomRef = useRef(null);
 
@@ -19,7 +20,16 @@ const ChatWindow = ({
 
     if (!selectedConversation) {
         return (
-            <div className="flex items-center justify-center h-full text-gray-400 text-lg">
+            <div className="flex flex-col items-center justify-center h-full text-gray-400 text-lg gap-4">
+                {/* Mobile menu button when no conversation */}
+                <button
+                    onClick={onOpenSidebar}
+                    className="md:hidden absolute top-4 left-4 p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
                 Select a conversation to start chatting
             </div>
         );
@@ -27,9 +37,26 @@ const ChatWindow = ({
 
     return (
         <div className="flex flex-col h-full bg-white">
-            <header className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-10">
-                <div>
-                    <h2 className="font-bold text-slate-800">
+            <header className="px-4 sm:px-6 py-4 border-b border-slate-100 flex items-center gap-3 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+                {/* Mobile menu button */}
+                <button
+                    onClick={onOpenSidebar}
+                    className="md:hidden p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors flex-shrink-0"
+                >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <div style={{ minWidth: 0, flex: "1 1 0" }}>
+                    <h2
+                        className="font-bold text-slate-800"
+                        style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                        }}
+                    >
                         {selectedConversation.title}
                     </h2>
                     <div className="flex items-center gap-1.5">
@@ -39,7 +66,7 @@ const ChatWindow = ({
                 </div>
             </header>
 
-            <div className="flex-1 p-6 overflow-y-auto space-y-2">
+            <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-2">
                 {messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-slate-400 space-y-4">
                         <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100">
@@ -75,7 +102,7 @@ const ChatWindow = ({
                 <div ref={bottomRef} className="h-4" />
             </div>
 
-            <div className="p-6 bg-gradient-to-t from-white via-white to-transparent">
+            <div className="p-4 sm:p-6 bg-gradient-to-t from-white via-white to-transparent">
                 <ChatInput
                     onSendMessage={onSendMessage}
                 />

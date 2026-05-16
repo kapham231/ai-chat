@@ -10,6 +10,7 @@ const ChatPage = () => {
     const [selectedConversation, setSelectedConversation] = useState(null);
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
         fetchConversations();
@@ -58,6 +59,7 @@ const ChatPage = () => {
             );
 
             setMessages([]);
+            setSidebarOpen(false);
         } catch (error) {
             console.error(error);
         }
@@ -69,6 +71,7 @@ const ChatPage = () => {
         setSelectedConversation(conversation);
 
         fetchMessages(conversation._id);
+        setSidebarOpen(false);
     };
 
     const sendMessage = async (
@@ -139,18 +142,37 @@ const ChatPage = () => {
     };
 
     return (
-        <div className="h-screen flex">
-            <Sidebar
-                conversations={conversations}
-                createConversation={createConversation}
-                onSelectConversation={
-                    handleSelectConversation
-                }
-                selectedConversation={selectedConversation}
-                onDeleteConversation={handleDeleteConversation}
-            />
+        <div className="h-screen flex relative">
+            {/* Overlay for mobile sidebar */}
+            {sidebarOpen && (
+                <div
+                    className="md:hidden fixed inset-0 bg-black/50 z-30 backdrop-blur-sm"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
 
-            <div className="flex-1">
+            {/* Sidebar - always visible on md+, slide-in on mobile */}
+            <div
+                className={`
+                    fixed md:relative inset-y-0 left-0 z-40
+                    transform transition-transform duration-300 ease-in-out
+                    ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+                    md:translate-x-0 md:block
+                `}
+            >
+                <Sidebar
+                    conversations={conversations}
+                    createConversation={createConversation}
+                    onSelectConversation={
+                        handleSelectConversation
+                    }
+                    selectedConversation={selectedConversation}
+                    onDeleteConversation={handleDeleteConversation}
+                    onClose={() => setSidebarOpen(false)}
+                />
+            </div>
+
+            <div className="flex-1 min-w-0">
                 <ChatWindow
                     messages={messages}
                     onSendMessage={sendMessage}
@@ -158,6 +180,7 @@ const ChatPage = () => {
                         selectedConversation
                     }
                     loading={loading}
+                    onOpenSidebar={() => setSidebarOpen(true)}
                 />
             </div>
         </div>

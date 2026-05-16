@@ -31,7 +31,7 @@ export const sendMessage = async (req, res) => {
             "New Conversation"
         ) {
             conversation.title =
-                prompt.trim().slice(0, 30);
+                prompt.trim().slice(0, 50);
 
             await conversation.save();
         }
