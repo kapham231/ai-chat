@@ -1,4 +1,5 @@
 import Message from "../models/message.model.js";
+import Conversation from "../models/conversation.model.js";
 import { generateAIResponse } from "../services/ai.service.js";
 
 export const sendMessage = async (req, res) => {
@@ -28,6 +29,14 @@ export const sendMessage = async (req, res) => {
             role: "assistant",
             content: aiResponse,
         });
+
+        // Update conversation timestamp (so it shows up last in history)
+        await Conversation.findByIdAndUpdate(
+            conversationId,
+            {
+                updatedAt: new Date(),
+            }
+        );
 
         res.status(200).json({
             success: true,
