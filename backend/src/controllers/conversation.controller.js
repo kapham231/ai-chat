@@ -67,3 +67,28 @@ export const getConversations = async (req, res) => {
         });
     }
 };
+
+// Delete conversation
+export const deleteConversation = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        await Conversation.findByIdAndDelete(id);
+
+        await Message.deleteMany({
+            conversationId: id,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Conversation deleted successfully",
+        });
+    } catch (error) {
+        console.error("Delete Conversation Error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};

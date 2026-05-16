@@ -105,6 +105,24 @@ const ChatPage = () => {
         }
     };
 
+    const handleDeleteConversation = async (id) => {
+        if (!window.confirm("Are you sure you want to delete this conversation?")) return;
+
+        try {
+            await api.delete(`/conversations/${id}`);
+            
+            setConversations(prev => prev.filter(c => c._id !== id));
+            
+            if (selectedConversation?._id === id) {
+                setSelectedConversation(null);
+                setMessages([]);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Failed to delete conversation");
+        }
+    };
+
     return (
         <div className="h-screen flex">
             <Sidebar
@@ -114,6 +132,7 @@ const ChatPage = () => {
                     handleSelectConversation
                 }
                 selectedConversation={selectedConversation}
+                onDeleteConversation={handleDeleteConversation}
             />
 
             <div className="flex-1">
