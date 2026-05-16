@@ -4,12 +4,12 @@ import { generateAIResponse } from "../services/ai.service.js";
 
 export const sendMessage = async (req, res) => {
     try {
-        const { conversationId, prompt } = req.body;
+        const { conversationId, prompt, attachments } = req.body;
 
-        if (!conversationId || !prompt) {
+        if (!conversationId || (!prompt && !attachments)) {
             return res.status(400).json({
                 success: false,
-                message: "conversationId and prompt are required",
+                message: "conversationId and either prompt or attachments are required",
             });
         }
 
@@ -17,7 +17,8 @@ export const sendMessage = async (req, res) => {
         const userMessage = await Message.create({
             conversationId,
             role: "user",
-            content: prompt,
+            content: prompt || "",
+            attachments: attachments || [],
         });
 
         // Update conversation title if still default
@@ -30,13 +31,20 @@ export const sendMessage = async (req, res) => {
             "New Conversation"
         ) {
             conversation.title =
-                prompt.trim().slice(0, 30);
+                prompt.trim().slice(0, 50);
 
             await conversation.save();
         }
 
+        // Prepare prompt for AI
+        let aiPrompt = prompt;
+        if (attachments && attachments.length > 0) {
+            const fileNames = attachments.map(a => a.filename).join(", ");
+            aiPrompt = `[User uploaded files: ${fileNames}]\n${prompt || "Discuss the uploaded files."}`;
+        }
+
         // Generate AI response
-        const aiResponse = await generateAIResponse(prompt);
+        const aiResponse = await generateAIResponse(aiPrompt);
 
         // Save AI message
         const assistantMessage = await Message.create({
