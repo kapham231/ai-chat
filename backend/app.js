@@ -9,7 +9,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static("uploads")); // To serve uploaded files in Frontend
+app.use("/api/uploads", express.static("uploads")); // To serve uploaded files in Frontend
 
 app.get("/", (req, res) => {
     res.send("API is running...");
