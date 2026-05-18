@@ -5,21 +5,16 @@ const client = new OpenAI({
     baseURL: "https://api.groq.com/openai/v1",
 });
 
-export const generateAIResponse = async (prompt) => {
+export const generateAIResponse = async (messages) => {
     try {
         const completion = await client.chat.completions.create({
             model: "llama-3.3-70b-versatile",
-            messages: [
-                {
-                    role: "user",
-                    content: prompt,
-                },
-            ],
+            messages: messages,
         });
 
         return completion.choices[0].message.content;
     } catch (error) {
-        console.error(error);
+        console.error("AI Generation Error:", error);
 
         throw new Error("Failed to generate AI response");
     }

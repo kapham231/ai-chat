@@ -1,39 +1,62 @@
 import api from "../services/api";
+import { toast } from "react-hot-toast";
 
 const UploadButton = ({ onUploadSuccess }) => {
     const handleUpload = async (e) => {
-        const file = e.target.files[0];
+        const files = Array.from(e.target.files);
 
-        if (!file) return;
+        if (files.length === 0) return;
 
-        try {
+        const uploadPromises = files.map(async (file) => {
             const formData = new FormData();
-
             formData.append("file", file);
 
-            const response = await api.post(
-                "/upload",
-                formData
-            );
-
-            if (onUploadSuccess) {
-                onUploadSuccess(response.data.data);
+            try {
+                const response = await api.post("/upload", formData);
+                return { success: true, data: response.data.data };
+            } catch (error) {
+                const errMsg = error.response?.data?.message || `Failed to upload ${file.name}`;
+                return { success: false, fileName: file.name, error: errMsg };
             }
-        } catch (error) {
-            console.error(error);
+        });
 
-            alert("Upload failed");
-        }
+        toast.promise(
+            Promise.all(uploadPromises).then((results) => {
+                const failures = results.filter((r) => !r.success);
+                const successes = results.filter((r) => r.success);
+
+                successes.forEach((s) => {
+                    if (onUploadSuccess) {
+                        onUploadSuccess(s.data);
+                    }
+                });
+
+                if (failures.length > 0) {
+                    const failMsgs = failures.map((f) => `${f.fileName}: ${f.error}`).join(", ");
+                    throw new Error(`Failed: ${failMsgs}`);
+                }
+                return `Uploaded ${successes.length} file(s) successfully!`;
+            }),
+            {
+                loading: "Uploading file(s)...",
+                success: (msg) => msg,
+                error: (err) => err.message,
+            }
+        );
+        
+        // Reset input value to allow selecting same files again
+        e.target.value = "";
     };
 
     return (
         <label className="cursor-pointer group flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-all border border-slate-200 hover:border-blue-200">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
             </svg>
 
             <input
                 type="file"
+                multiple
                 hidden
                 onChange={handleUpload}
             />
