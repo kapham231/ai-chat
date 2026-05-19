@@ -20,8 +20,18 @@ const ChatPage = () => {
     const fetchConversations = async () => {
         try {
             const response = await api.get("/conversations");
-            console.log(response.data);
-            setConversations(response.data.data);
+            // console.log(response.data);
+            const convs = response.data.data;
+            setConversations(convs);
+
+            const savedId = sessionStorage.getItem("activeConversationId");
+            if (savedId && convs.length > 0) {
+                const activeConv = convs.find(c => c._id === savedId);
+                if (activeConv) {
+                    setSelectedConversation(activeConv);
+                    fetchMessages(activeConv._id);
+                }
+            }
         } catch (error) {
             console.error(error);
         }
@@ -58,6 +68,7 @@ const ChatPage = () => {
             setSelectedConversation(
                 newConversation
             );
+            sessionStorage.setItem("activeConversationId", newConversation._id);
 
             setMessages([]);
             setSidebarOpen(false);
@@ -70,6 +81,7 @@ const ChatPage = () => {
         conversation
     ) => {
         setSelectedConversation(conversation);
+        sessionStorage.setItem("activeConversationId", conversation._id);
 
         fetchMessages(conversation._id);
         setSidebarOpen(false);
@@ -132,6 +144,7 @@ const ChatPage = () => {
 
             if (selectedConversation?._id === id) {
                 setSelectedConversation(null);
+                sessionStorage.removeItem("activeConversationId");
                 setMessages([]);
             }
             toast.success("Conversation deleted successfully");
