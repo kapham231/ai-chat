@@ -36,8 +36,8 @@ const ChatWindow = ({
     }
 
     return (
-        <div className="flex flex-col h-full bg-white">
-            <header className="px-4 sm:px-6 py-4 border-b border-slate-100 flex items-center gap-3 bg-white/80 backdrop-blur-md sticky top-0 z-10">
+        <div className="flex flex-col h-full bg-slate-100">
+            <header className="px-4 sm:px-6 py-4 border-b border-slate-200/80 flex items-center gap-3 bg-white/90 backdrop-blur-md sticky top-0 z-10 shadow-sm shadow-slate-100/50">
                 {/* Mobile menu button */}
                 <button
                     onClick={onOpenSidebar}
@@ -102,7 +102,7 @@ const ChatWindow = ({
                 <div ref={bottomRef} className="h-4" />
             </div>
 
-            <div className="p-4 sm:p-6 bg-gradient-to-t from-white via-white to-transparent">
+            <div className="p-4 sm:p-6 bg-gradient-to-t from-slate-100 via-slate-100 to-transparent">
                 <ChatInput
                     onSendMessage={onSendMessage}
                     selectedConversationId={selectedConversation?._id}
