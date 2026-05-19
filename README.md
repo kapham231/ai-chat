@@ -14,6 +14,7 @@ A full-stack chat application integrated with Groq AI, allowing users to convers
 ## Live Demo
 - Front-end: https://ai-chat-gamma-rosy.vercel.app
 - Back-end: https://ai-chat-yqti.onrender.com
+
 ![UI demo image](frontend/src/assets/images/UI_demo_image.png)
 
 > [!NOTE]
