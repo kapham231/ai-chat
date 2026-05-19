@@ -1,13 +1,20 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import UploadButton from "./UploadButton";
 
 const ChatInput = ({
     onSendMessage,
+    selectedConversationId,
 }) => {
     const [prompt, setPrompt] = useState("");
     const [attachments, setAttachments] = useState([]);
     const textareaRef = useRef(null);
+
+    useEffect(() => {
+        if (textareaRef.current) {
+            textareaRef.current.focus();
+        }
+    }, [selectedConversationId]);
 
     const handleSend = () => {
         if (!prompt.trim() && attachments.length === 0) return;

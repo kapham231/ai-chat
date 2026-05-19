@@ -11,6 +11,15 @@ A full-stack chat application integrated with Groq AI, allowing users to convers
 - **Responsive UI:** A modern, responsive interface built with React and TailwindCSS.
 - **Markdown Support:** Renders AI responses formatted in Markdown.
 
+## Live Demo
+- Front-end: https://ai-chat-gamma-rosy.vercel.app
+- Back-end: https://ai-chat-yqti.onrender.com
+![UI demo image](frontend/src/assets/images/UI_demo_image.png)
+
+> [!NOTE]
+> **Note:** Since the Back-end is hosted on Render's free tier, the server may go to sleep due to inactivity. It might take **1 to 2 minutes** to spin up and respond to the first API request. During this time, the application interface might appear unresponsive or API-related features may not work immediately.
+
+
 ## Technology Stack
 
 ### Frontend
