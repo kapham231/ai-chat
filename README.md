@@ -1,0 +1,100 @@
+# AI Chat Application
+
+A full-stack chat application integrated with Groq AI, allowing users to converse with AI and attach files to their messages. This project serves as a demonstration of a clean, modern MERN-like stack with AI integration.
+
+## Key Features
+
+- **Interactive AI Chat:** Real-time conversation with Groq AI.
+- **Contextual Awareness:** The AI maintains conversation history to provide contextual responses.
+- **File Uploads:** Support for uploading files (images, documents) alongside prompts, enabling the AI to discuss the attached content.
+- **Conversation Management:** Create new chats, view conversation history in the sidebar, and switch between different chat sessions.
+- **Responsive UI:** A modern, responsive interface built with React and TailwindCSS.
+- **Markdown Support:** Renders AI responses formatted in Markdown.
+
+## Technology Stack
+
+### Frontend
+- **Framework:** React 19 + Vite
+- **Styling:** TailwindCSS 4
+- **HTTP Client:** Axios
+- **Markdown:** react-markdown & remark-gfm
+- **Notifications:** react-hot-toast
+
+### Backend
+- **Framework:** Node.js + Express
+- **Database:** MongoDB (via Mongoose)
+- **AI Integration:** Groq API (using OpenAI SDK compatibility)
+- **File Uploads:** Multer
+- **Validation:** Zod
+
+## Prerequisites
+
+Before running the project, ensure you have the following installed:
+- Node.js (v18 or higher recommended)
+- MongoDB (local instance or MongoDB Atlas cluster)
+- A Groq API Key
+
+## Getting Started
+
+Follow these steps to set up the project locally.
+
+### 1. Clone the repository
+
+```bash
+git clone <your-repository-url>
+cd ai-chat
+```
+
+### 2. Backend Setup
+
+Open a terminal and navigate to the backend directory:
+
+```bash
+cd backend
+npm install
+```
+
+Create a `.env` file in the `backend` directory based on `.env.example`:
+
+```env
+PORT=5000
+MONGODB_URI=your-mongodb-connection-string
+GROQ_API_KEY=your-groq-api-key
+```
+
+Start the backend development server:
+
+```bash
+npm run dev
+```
+
+### 3. Frontend Setup
+
+Open a new terminal and navigate to the frontend directory:
+
+```bash
+cd frontend
+npm install
+```
+
+Create a `.env` file in the `frontend` directory based on `.env.example`:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000
+```
+
+Start the frontend development server:
+
+```bash
+npm run dev
+```
+
+## Project Structure
+
+- `/backend`: Contains the Node.js/Express server code, database models, API routes, controllers, and upload middleware. The uploaded files are stored in `/backend/uploads`.
+- `/frontend`: Contains the React application, UI components (ChatWindow, Sidebar, ChatInput), API service configurations, and styles.
+
+## Usage
+
+Once both servers are running, access the frontend application in your browser (typically at `http://localhost:5173`). 
+You can type messages in the input area, use the '+' button to attach files, and press the Send button (or Enter) to communicate with the AI.
