@@ -26,16 +26,40 @@ export const createConversation = async (req, res) => {
 export const getConversationMessages = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Page and limit are already parsed as numbers by Zod validator!
+        const page = req.query.page || 1;
+        const limit = req.query.limit || 50; 
+        const skip = (page - 1) * limit;
 
+        const totalMessages = await Message.countDocuments({
+            conversationId: id,
+        });
+
+        // 1. Sort newest first (-1) to paginate starting from the most recent messages
+        // 2. Apply skip and limit
         const messages = await Message.find({
             conversationId: id,
-        }).sort({
-            createdAt: 1,
-        });
+        })
+        .sort({
+            createdAt: -1,
+        })
+        .skip(skip)
+        .limit(limit);
+
+        // 3. Reverse back to chronological order (oldest to newest) for frontend rendering
+        const chronologicalMessages = messages.reverse();
 
         res.status(200).json({
             success: true,
-            data: messages,
+            data: chronologicalMessages,
+            pagination: {
+                page,
+                limit,
+                totalMessages,
+                totalPages: Math.ceil(totalMessages / limit),
+                hasMore: skip + messages.length < totalMessages,
+            }
         });
     } catch (error) {
         console.error("Get Messages Error:", error);

@@ -43,8 +43,29 @@ export const sendMessage = async (req, res) => {
             aiPrompt = `[User uploaded files: ${fileNames}]\n${prompt || "Discuss the uploaded files."}`;
         }
 
+        // Fetch conversation message history for context (limit to last 20 messages)
+        const history = await Message.find({ conversationId })
+            .sort({ createdAt: 1 })
+            .limit(20);
+
+        // Format history for Groq/OpenAI: { role: "user" | "assistant", content: string }
+        const messages = history.map((msg, idx) => {
+            // For the last message (which is the one we just saved userMessage), 
+            // if there are attachments, we use the prepared aiPrompt which has file context.
+            if (idx === history.length - 1 && attachments && attachments.length > 0) {
+                return {
+                    role: "user",
+                    content: aiPrompt,
+                };
+            }
+            return {
+                role: msg.role === "assistant" ? "assistant" : "user",
+                content: msg.content || "",
+            };
+        });
+
         // Generate AI response
-        const aiResponse = await generateAIResponse(aiPrompt);
+        const aiResponse = await generateAIResponse(messages);
 
         // Save AI message
         const assistantMessage = await Message.create({

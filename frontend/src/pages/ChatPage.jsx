@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import Sidebar from "../components/Sidebar";
 import ChatWindow from "../components/ChatWindow";
+import { toast } from "react-hot-toast";
 
 import api from "../services/api";
 
@@ -117,28 +118,64 @@ const ChatPage = () => {
         } catch (error) {
             console.error(error);
             setMessages((prev) => prev.filter(m => m._id !== tempUserMessage._id));
-            alert("Failed to send message");
+            toast.error("Failed to send message");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDeleteConversation = async (id) => {
-        if (!window.confirm("Are you sure you want to delete this conversation?")) return;
-
+    const executeDelete = async (id) => {
         try {
             await api.delete(`/conversations/${id}`);
-            
+
             setConversations(prev => prev.filter(c => c._id !== id));
-            
+
             if (selectedConversation?._id === id) {
                 setSelectedConversation(null);
                 setMessages([]);
             }
+            toast.success("Conversation deleted successfully");
         } catch (error) {
             console.error(error);
-            alert("Failed to delete conversation");
+            toast.error("Failed to delete conversation");
         }
+    };
+
+    const handleDeleteConversation = (id) => {
+        toast((t) => (
+            <div className="flex flex-col gap-3 p-1">
+                <p className="text-sm font-semibold text-slate-800">
+                    Are you sure you want to delete this conversation?
+                </p>
+                <div className="flex justify-end gap-2">
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-500 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            await executeDelete(id);
+                        }}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer"
+                    >
+                        Delete
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: 6000,
+            position: "top-center",
+            style: {
+                minWidth: "320px",
+                boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+                borderRadius: "1rem",
+                border: "1px solid #f1f5f9",
+                padding: "12px",
+            }
+        });
     };
 
     return (

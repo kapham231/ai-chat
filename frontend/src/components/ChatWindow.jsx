@@ -105,6 +105,7 @@ const ChatWindow = ({
             <div className="p-4 sm:p-6 bg-gradient-to-t from-white via-white to-transparent">
                 <ChatInput
                     onSendMessage={onSendMessage}
+                    selectedConversationId={selectedConversation?._id}
                 />
             </div>
         </div>
