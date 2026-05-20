@@ -44,9 +44,11 @@ export const sendMessage = async (req, res) => {
         }
 
         // Fetch conversation message history for context (limit to last 20 messages)
-        const history = await Message.find({ conversationId })
-            .sort({ createdAt: 1 })
+        let history = await Message.find({ conversationId })
+            .sort({ createdAt: -1 })
             .limit(20);
+            
+        history = history.reverse();
 
         // Format history for Groq/OpenAI: { role: "user" | "assistant", content: string }
         const messages = history.map((msg, idx) => {
