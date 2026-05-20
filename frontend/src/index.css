@@ -25,7 +25,7 @@ body {
 
 /* Markdown Styles */
 .markdown-content p {
-  @apply mb-2 last:mb-0;
+  @apply mb-2 last:mb-0 whitespace-pre-wrap;
 }
 
 .markdown-content ul, .markdown-content ol {
