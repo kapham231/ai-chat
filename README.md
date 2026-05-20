@@ -68,11 +68,12 @@ cd ai-chat
 
 ### 2. Backend Setup
 
-Open a terminal and navigate to the backend directory:
+Open a terminal (Command Prompt/PowerShell on Windows, or Terminal on macOS/Linux) and navigate to the backend directory, install dependencies, and create the `uploads` directory (required for file uploads). The commands below work for both Windows and macOS:
 
 ```bash
 cd backend
 npm install
+mkdir uploads
 ```
 
 Create a `.env` file in the `backend` directory based on `.env.example`:
@@ -91,7 +92,7 @@ npm run dev
 
 ### 3. Frontend Setup
 
-Open a new terminal and navigate to the frontend directory:
+Open a new terminal (Command Prompt/PowerShell on Windows, or Terminal on macOS/Linux) and navigate to the frontend directory:
 
 ```bash
 cd frontend
