@@ -139,7 +139,8 @@ const ChatPage = () => {
         } catch (error) {
             console.error(error);
             setMessages((prev) => prev.filter(m => m._id !== tempUserMessage._id));
-            toast.error("Failed to send message");
+            const errorMessage = error.response?.data?.message || "Failed to send message";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }

@@ -16,6 +16,9 @@ export const generateAIResponse = async (messages) => {
     } catch (error) {
         console.error("AI Generation Error:", error);
 
-        throw new Error("Failed to generate AI response");
+        if (error.status === 429) {
+            throw new Error("AI provider quota exceeded or rate limited. Please try again later.");
+        }
+        throw new Error(error.message || "Failed to generate AI response");
     }
 };

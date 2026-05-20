@@ -47,7 +47,7 @@ export const sendMessage = async (req, res) => {
         // Fetch conversation message history for context (limit to last 20 messages)
         let history = await Message.find({ conversationId })
             .sort({ createdAt: -1 })
-            .limit(20);
+            .limit(10);
             
         history = history.reverse();
 
