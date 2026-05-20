@@ -14,7 +14,8 @@ export const sendMessage = async (req, res) => {
         }
 
         // Save user message
-        const userMessage = await Message.create({
+        let userMessage;
+        userMessage = await Message.create({
             conversationId,
             role: "user",
             content: prompt || "",
@@ -93,6 +94,15 @@ export const sendMessage = async (req, res) => {
         });
     } catch (error) {
         console.error("Send Message Error:", error);
+
+        // Rollback: Delete user message if AI fails to respond
+        if (userMessage && userMessage._id) {
+            try {
+                await Message.findByIdAndDelete(userMessage._id);
+            } catch (rollbackError) {
+                console.error("Failed to rollback user message:", rollbackError);
+            }
+        }
 
         res.status(500).json({
             success: false,
