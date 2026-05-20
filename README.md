@@ -49,6 +49,7 @@ Before running the project, ensure you have the following installed:
 - Node.js (v18 or higher recommended)
 - MongoDB (local instance or MongoDB Atlas cluster)
 - A Groq API Key
+  - If you don't know how to get one, follow the Groq documentation: https://console.groq.com/docs/quickstart
 
 ## Getting Started
 
