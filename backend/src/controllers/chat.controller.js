@@ -14,7 +14,8 @@ export const sendMessage = async (req, res) => {
         }
 
         // Save user message
-        const userMessage = await Message.create({
+        let userMessage;
+        userMessage = await Message.create({
             conversationId,
             role: "user",
             content: prompt || "",
@@ -44,9 +45,11 @@ export const sendMessage = async (req, res) => {
         }
 
         // Fetch conversation message history for context (limit to last 20 messages)
-        const history = await Message.find({ conversationId })
-            .sort({ createdAt: 1 })
-            .limit(20);
+        let history = await Message.find({ conversationId })
+            .sort({ createdAt: -1 })
+            .limit(10);
+            
+        history = history.reverse();
 
         // Format history for Groq/OpenAI: { role: "user" | "assistant", content: string }
         const messages = history.map((msg, idx) => {
@@ -91,6 +94,15 @@ export const sendMessage = async (req, res) => {
         });
     } catch (error) {
         console.error("Send Message Error:", error);
+
+        // Rollback: Delete user message if AI fails to respond
+        if (userMessage && userMessage._id) {
+            try {
+                await Message.findByIdAndDelete(userMessage._id);
+            } catch (rollbackError) {
+                console.error("Failed to rollback user message:", rollbackError);
+            }
+        }
 
         res.status(500).json({
             success: false,

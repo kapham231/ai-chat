@@ -19,7 +19,7 @@ const ChatPage = () => {
         fetchConversations();
     }, []);
 
-    const fetchConversations = async () => {
+    const fetchConversations = async (skipMessageLoad = false) => {
         try {
             const response = await api.get("/conversations");
             // console.log(response.data);
@@ -31,7 +31,9 @@ const ChatPage = () => {
                 const activeConv = convs.find(c => c._id === savedId);
                 if (activeConv) {
                     setSelectedConversation(activeConv);
-                    await fetchMessages(activeConv._id);
+                    if (!skipMessageLoad) {
+                        await fetchMessages(activeConv._id);
+                    }
                 }
             }
         } catch (error) {
@@ -133,11 +135,12 @@ const ChatPage = () => {
                 assistantMessage,
             ]);
 
-            fetchConversations();
+            fetchConversations(true);
         } catch (error) {
             console.error(error);
             setMessages((prev) => prev.filter(m => m._id !== tempUserMessage._id));
-            toast.error("Failed to send message");
+            const errorMessage = error.response?.data?.message || "Failed to send message";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
