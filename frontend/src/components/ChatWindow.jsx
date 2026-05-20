@@ -8,6 +8,7 @@ const ChatWindow = ({
     onSendMessage,
     selectedConversation,
     loading,
+    messagesLoading,
     onOpenSidebar,
 }) => {
     const bottomRef = useRef(null);
@@ -20,17 +21,28 @@ const ChatWindow = ({
 
     if (!selectedConversation) {
         return (
-            <div className="flex flex-col items-center justify-center h-full text-gray-400 text-lg gap-4">
+            <div className="flex flex-col items-center justify-center h-full bg-slate-100 text-slate-400 text-center px-4 relative">
                 {/* Mobile menu button when no conversation */}
                 <button
                     onClick={onOpenSidebar}
-                    className="md:hidden absolute top-4 left-4 p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors"
+                    className="md:hidden absolute top-4 left-4 p-2 rounded-xl bg-white text-slate-600 hover:bg-slate-50 transition-colors border border-slate-200 shadow-sm"
                 >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-                Select a conversation to start chatting
+                
+                <div className="flex flex-col items-center max-w-sm space-y-4">
+                    <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-center text-blue-800/40">
+                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 className="text-slate-700 font-semibold text-base">Select a conversation</h3>
+                        <p className="text-sm text-slate-400 mt-1">Choose a chat from the sidebar or start a new one to begin your assistant conversation.</p>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -67,7 +79,15 @@ const ChatWindow = ({
             </header>
 
             <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-2">
-                {messages.length === 0 ? (
+                {messagesLoading ? (
+                    <div className="flex flex-col items-center justify-center h-full text-slate-400 space-y-3">
+                        <div className="relative w-8 h-8">
+                            <div className="absolute inset-0 rounded-full border-2 border-slate-200"></div>
+                            <div className="absolute inset-0 rounded-full border-2 border-blue-600 border-t-transparent animate-spin"></div>
+                        </div>
+                        <p className="text-xs font-medium text-slate-400">Loading messages...</p>
+                    </div>
+                ) : messages.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-slate-400 space-y-4">
                         <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100">
                             <svg className="w-8 h-8 text-blue-800/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">

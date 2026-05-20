@@ -17,6 +17,10 @@ A full-stack chat application integrated with Groq AI, allowing users to convers
 
 The main page of the application looks like this:
 
+![UI demo image](frontend/src/assets/images/homepage_UI_image.png)
+
+The conversation UI of the application looks like this:
+
 ![UI demo image](frontend/src/assets/images/UI_demo_image.png)
 
 > [!NOTE]
@@ -45,6 +49,7 @@ Before running the project, ensure you have the following installed:
 - Node.js (v18 or higher recommended)
 - MongoDB (local instance or MongoDB Atlas cluster)
 - A Groq API Key
+  - If you don't know how to get one, follow the Groq documentation: https://console.groq.com/docs/quickstart
 
 ## Getting Started
 
