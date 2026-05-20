@@ -25,10 +25,13 @@ const storage = multer.diskStorage({
     },
 });
 
+export const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB limit
+export const MAX_FILE_SIZE_MB = MAX_FILE_SIZE_BYTES / (1024 * 1024);
+
 const upload = multer({
     storage,
     limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB limit
+        fileSize: MAX_FILE_SIZE_BYTES,
     },
     fileFilter: (req, file, cb) => {
         const allowedMimeTypes = [

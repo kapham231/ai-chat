@@ -1,6 +1,9 @@
 import api from "../services/api";
 import { toast } from "react-hot-toast";
 
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
 const UploadButton = ({ onUploadSuccess }) => {
     const handleUpload = async (e) => {
         const files = Array.from(e.target.files);
@@ -8,6 +11,14 @@ const UploadButton = ({ onUploadSuccess }) => {
         if (files.length === 0) return;
 
         const uploadPromises = files.map(async (file) => {
+            if (file.size > MAX_FILE_SIZE_BYTES) {
+                return {
+                    success: false,
+                    fileName: file.name,
+                    error: `File too large. Maximum size allowed is ${MAX_FILE_SIZE_MB}MB.`,
+                };
+            }
+
             const formData = new FormData();
             formData.append("file", file);
 

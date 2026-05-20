@@ -12,6 +12,8 @@ const ChatPage = () => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [messagesLoading, setMessagesLoading] = useState(false);
 
     useEffect(() => {
         fetchConversations();
@@ -29,11 +31,13 @@ const ChatPage = () => {
                 const activeConv = convs.find(c => c._id === savedId);
                 if (activeConv) {
                     setSelectedConversation(activeConv);
-                    fetchMessages(activeConv._id);
+                    await fetchMessages(activeConv._id);
                 }
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsInitialLoading(false);
         }
     };
 
@@ -41,6 +45,7 @@ const ChatPage = () => {
         conversationId
     ) => {
         try {
+            setMessagesLoading(true);
             const response = await api.get(
                 `/conversations/${conversationId}/messages`
             );
@@ -48,6 +53,8 @@ const ChatPage = () => {
             setMessages(response.data.data);
         } catch (error) {
             console.error(error);
+        } finally {
+            setMessagesLoading(false);
         }
     };
 
@@ -191,6 +198,20 @@ const ChatPage = () => {
         });
     };
 
+    if (isInitialLoading) {
+        return (
+            <div className="h-screen w-screen flex flex-col items-center justify-center bg-slate-100 text-slate-400">
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="relative w-12 h-12">
+                        <div className="absolute inset-0 rounded-full border-4 border-blue-100/60"></div>
+                        <div className="absolute inset-0 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"></div>
+                    </div>
+                    <p className="text-sm font-medium text-slate-500 animate-pulse">Loading app...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="h-screen flex relative">
             {/* Overlay for mobile sidebar */}
@@ -230,6 +251,7 @@ const ChatPage = () => {
                         selectedConversation
                     }
                     loading={loading}
+                    messagesLoading={messagesLoading}
                     onOpenSidebar={() => setSidebarOpen(true)}
                 />
             </div>

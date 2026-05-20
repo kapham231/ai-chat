@@ -17,6 +17,10 @@ A full-stack chat application integrated with Groq AI, allowing users to convers
 
 The main page of the application looks like this:
 
+![UI demo image](frontend/src/assets/images/homepage_UI_image.png)
+
+The conversation UI of the application looks like this:
+
 ![UI demo image](frontend/src/assets/images/UI_demo_image.png)
 
 > [!NOTE]
