@@ -1,6 +1,6 @@
 # AI Chat Application
 
-A full-stack chat application integrated with Groq AI, allowing users to converse with AI and attach files to their messages. This project serves as a demonstration of a clean, modern MERN-like stack with AI integration.
+A full-stack MERN application integrated with Groq AI, allowing users to converse with AI and attach files to their messages.
 
 ## Key Features
 
@@ -24,7 +24,7 @@ The conversation UI of the application looks like this:
 ![UI demo image](frontend/src/assets/images/UI_demo_image.png)
 
 > [!NOTE]
-> **Note:** Since the Back-end is hosted on Render's free tier, the server may go to sleep due to inactivity. It might take **1 to 2 minutes** to spin up and respond to the first API request. During this time, the application interface might appear unresponsive or API-related features may not work immediately.
+> **Note:** The backend is hosted on Render Free Tier, so the first request after a period of inactivity may take a short time to wake the server.
 
 
 ## Technology Stack
@@ -42,6 +42,10 @@ The conversation UI of the application looks like this:
 - **AI Integration:** Groq API (using OpenAI SDK compatibility)
 - **File Uploads:** Multer
 - **Validation:** Zod
+
+### AI Configuration
+- **Provider:** Groq
+- **Model:** llama-3.1-8b-instant
 
 ## Prerequisites
 
