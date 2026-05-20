@@ -101,7 +101,7 @@ npm install
 Create a `.env` file in the `frontend` directory based on `.env.example`:
 
 ```env
-VITE_API_BASE_URL=http://localhost:5000
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
 Start the frontend development server:
