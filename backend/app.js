@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/uploads", express.static("uploads")); // To serve uploaded files in Frontend production
 
-app.get("/", (req, res) => {
+app.get(["/", "/api"], (req, res) => {
     res.send("AI Chat API is running...");
 });
 
